@@ -1,0 +1,104 @@
+section a, button {
+  background-color: $black;
+  color: $orange;
+  border: .2rem solid $black;
+  border-radius: 1rem;
+  cursor: pointer;
+  padding: 1rem;
+  margin: .2rem;
+  display: inline-block;
+
+  &:hover {
+    background-color: $lightGrey;
+    color: $darkOrange;
+  }
+
+  &.small {
+    font-size: .8em;
+    padding: .5rem;
+  }
+
+  &.selected {
+    color: $darkOrange;
+    border-color: $green;
+  }
+
+  .fa-check {
+    display: none;
+  }
+
+  &.checked .fa-check {
+    display: inline-block;
+  }
+
+  &.right {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+}
+
+#specialization a {
+  border-radius: 50%;
+  padding: .6rem;
+  width: 3.5rem;
+  height: 3.5rem;
+
+  &[data-type="role"] {
+    padding: .4rem;
+  }
+
+  &.selected, &.partial.selected {
+    border-color: $lightGreen;
+  }
+
+  &.partial {
+    border-color: $darkGreen;
+  }
+}
+
+#dungeon a {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+  width: 13rem;
+  height: 6.5rem;
+  background: $black center center/13rem 6.5rem no-repeat;
+  text-shadow: -1px -1px $black,
+  -1px 0 $black,
+  -1px 1px $black,
+  0 -1px $black,
+  0 1px $black,
+  1px -1px $black,
+  1px 0 $black,
+  1px 1px $black;
+
+  &:hover {
+    background-size: 17rem 8.5rem;
+    color: $orange;
+  }
+}
+
+#level a {
+  width: 2.1rem;
+  height: 2.1rem;
+  line-height: 2.1rem;
+}
+
+#affix a {
+  border-radius: 4rem;
+}
+
+footer a {
+  color: $orange;
+  cursor: pointer;
+
+  .fa {
+    color: white;
+  }
+
+  &:hover {
+    color: $darkOrange;
+  }
+}

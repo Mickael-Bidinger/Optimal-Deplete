@@ -1,0 +1,19 @@
+{
+  "_comment": "Choisissez une route pour admin",
+  "Home": {
+    "path": "",
+    "Controller": "HomeController"
+  },
+  "filters": {
+    "path": "filters",
+    "Controller": "FiltersController"
+  },
+  "graphic": {
+    "path": "graphic",
+    "Controller": "GraphicController"
+  },
+  "Admin": {
+    "path": "admin",
+    "Controller": "AdminController"
+  }
+}

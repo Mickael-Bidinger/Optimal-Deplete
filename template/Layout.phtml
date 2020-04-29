@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?= $_title ?? 'World of Warcraft statistics for Mythic+' ?></title>
+    <meta name="description"
+          content="Is monk tank that strong ? Come and find out which specialization times the most mythic+ keys. Compare and filter by specialization, dungeon, key level, faction and so on ...">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="canonical" href="https://www.optimaldeplete.com">
+    <link rel="shortcut icon" type="image/png" href="<?= RELATIVE_ROOT_PATH ?>/images/brand/ico.png">
+    <link rel="icon" type="image/png" href="<?= RELATIVE_ROOT_PATH ?>/images/brand/ico.png">
+    <link rel="stylesheet" href="<?= RELATIVE_ROOT_PATH ?>/css/main.css">
+    <?php foreach ($_stylesheets as $stylesheet): ?>
+        <link rel="stylesheet" href="<?= RELATIVE_ROOT_PATH ?>/css/<?= $stylesheet ?>.css">
+    <?php endforeach ?>
+</head>
+<body>
+<header>
+    <?php include ROOT_PATH . '/template/view/header/Layout.phtml' ?>
+</header>
+<main>
+    <?php include $_view ?>
+</main>
+<footer>
+    <?php include ROOT_PATH . '/template/view/footer/Layout.phtml' ?>
+</footer>
+<script src="<?= RELATIVE_ROOT_PATH ?>/js/main.js"></script>
+<?php foreach ($_scripts as $script): ?>
+    <script src="<?= RELATIVE_ROOT_PATH ?>/js/<?= $script ?>.js"></script>
+<?php endforeach ?>
+</body>
+</html>

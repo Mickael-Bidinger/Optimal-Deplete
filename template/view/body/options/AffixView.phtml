@@ -1,0 +1,27 @@
+<div class="container">
+    <h3>Affix</h3>
+    <nav>
+        <ul>
+            <?php foreach ($affixSetList as $affixSet): ?>
+                <li>
+                    <a href="<?= RELATIVE_ROOT_PATH ?>/affix-<?= $_display->string($affixSet->getId()) ?>"
+                       data-type="affix"
+                       data-affix="<?= $_display->string($affixSet->getId()) ?>"
+                       aria-label="Week <?= $_display->string($affixSet->getId()) ?>"
+                    >
+                        <?php foreach ($affixSet->getAffixes() as $affix): ?><!--
+                            --><img src="<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($affix->getImage()) ?>"
+                                    alt="<?= $_display->string($affix) ?>"
+                                    title="<?= $_display->string($affix) ?>"><!--
+                        --><?php endforeach ?>
+                    </a>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+</div>
+<table>
+    <tr>
+        <td></td>
+    </tr>
+</table>

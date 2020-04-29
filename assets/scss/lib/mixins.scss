@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+@mixin fontface($fontName) {
+  $path: "../fonts/#{$fontName}/";
+
+  @font-face {
+    font-family: "#{$fontName}";
+    font-weight: normal;
+    font-style: normal;
+    src: url($path + "#{$fontName}-Regular.woff2") format("woff2"),
+    url($path + "#{$fontName}-Regular.woff") format("woff"),
+    url($path + "#{$fontName}-Regular.ttf") format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "#{$fontName}";
+    font-weight: bold;
+    font-style: normal;
+    src: url($path + "#{$fontName}-Bold.woff2") format("woff2"),
+    url($path + "#{$fontName}-Bold.woff") format("woff"),
+    url($path + "#{$fontName}-Bold.ttf") format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "#{$fontName}";
+    font-weight: normal;
+    font-style: italic;
+    src: url($path + "#{$fontName}-Italic.woff2") format("woff2"),
+    url($path + "#{$fontName}-Italic.woff") format("woff"),
+    url($path + "#{$fontName}-Italic.ttf") format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "#{$fontName}";
+    font-weight: bold;
+    font-style: italic;
+    src: url($path + "#{$fontName}-BoldItalic.woff2") format("woff2"),
+    url($path + "#{$fontName}-BoldItalic.woff") format("woff"),
+    url($path + "#{$fontName}-BoldItalic.ttf") format("truetype");
+    font-display: swap;
+  }
+}

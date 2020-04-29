@@ -1,0 +1,23 @@
+<div class="container">
+    <h3>Faction</h3>
+    <nav>
+        <ul>
+            <?php foreach ($factions as $faction): ?>
+                <?php if ($faction->getName() === 'NONE'): ?>
+                    <?php continue ?>
+                <?php endif ?>
+                <li>
+                    <a href="<?= RELATIVE_ROOT_PATH ?>/faction-<?= $_display->string($faction->getId()) ?>"
+                       data-type="faction"
+                       data-faction="<?= $_display->string($faction->getId()) ?>"
+                       title="<?= $_display->string($faction) ?>"
+                       aria-label="<?= $_display->string($faction) ?>"
+                    >
+                        <img src="<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($faction->getImage()) ?>"
+                             alt="<?= $_display->string($faction) ?>">
+                    </a>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,20 @@
+<div class="container">
+    <h3>Dungeon</h3>
+    <nav>
+        <ul>
+            <?php foreach ($dungeons as $dungeon): ?>
+                <li>
+                    <a href="<?= RELATIVE_ROOT_PATH ?>/dungeon-<?= $_display->string($dungeon->getId()) ?>"
+                       data-type="dungeon"
+                       data-dungeon="<?= $_display->string($dungeon->getId()) ?>"
+                       title="<?= $_display->string($dungeon) ?>"
+                       aria-label="<?= $_display->string($dungeon) ?>"
+                       style="background-image: url('<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($dungeon->getImage(), '\'', '\\\'') ?>');"
+                    >
+                        <?= $_display->string($dungeon, '.*-', '') ?>
+                    </a>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+</div>

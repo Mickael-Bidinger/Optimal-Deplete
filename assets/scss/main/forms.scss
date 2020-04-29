@@ -1,0 +1,30 @@
+form {
+  input[type="text"], input[type="password"] {
+    background-color: $black;
+    color: $orange;
+    border: .2rem solid $black;
+    border-radius: 1rem;
+    padding: 1rem;
+    cursor: text;
+    margin: .2rem;
+    text-align: center;
+
+    &:hover {
+      background-color: $lightGrey;
+      color: $darkOrange;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+#level form {
+  margin-bottom: .5rem;
+
+  input[type="text"] {
+    width: 4.2rem;
+    height: 2.1rem;
+  }
+}

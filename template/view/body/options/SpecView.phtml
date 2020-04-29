@@ -1,0 +1,75 @@
+<div class="container">
+    <h3>Specialization</h3>
+    <nav>
+        <ul>
+            <?php foreach ($roles as $role): ?>
+                <li>
+                    <a href="<?= RELATIVE_ROOT_PATH ?>/specialization-<?= $_display->string(\implode('-', $specRepo->listIdsByRole($role->getId()))) ?>"
+                       data-type="role"
+                       data-role="<?= $_display->string($role->getId()) ?>"
+                       title="<?= $_display->string($role) ?>"
+                       aria-label="<?= $_display->string($role) ?>"
+                    >
+                        <img src="<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($role->getImage()) ?>"
+                             alt="<?= $_display->string($role) ?>"
+                        >
+                    </a>
+                    <ul class="hidden hover-container">
+                        <?php foreach ($specRepo->listByRole($role->getId()) as $spec): ?>
+                            <li>
+                                <a href="<?= RELATIVE_ROOT_PATH ?>/specialization-<?= $_display->string($spec->getId()) ?>"
+                                   data-type="specialization"
+                                   data-role="<?= $_display->string($role->getId()) ?>"
+                                   data-class="<?= $_display->string($spec->getClassId()) ?>"
+                                   data-specialization="<?= $_display->string($spec->getId()) ?>"
+                                   title="<?= $_display->string($spec, '-', ' ') ?>"
+                                   aria-label="<?= $_display->string($spec, '-', ' ') ?>"
+                                >
+                                    <img src="<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($spec->getImage()) ?>"
+                                         alt="<?= $_display->string($spec, '-', ' ') ?>"
+                                    >
+                                </a>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+    <nav>
+        <ul>
+            <?php foreach ($classes as $class): ?>
+                <li>
+                    <a href="<?= RELATIVE_ROOT_PATH ?>/specialization-<?= $_display->string(\implode('-', $specRepo->listIdsByClass($class->getId()))) ?>"
+                       data-type="class"
+                       data-class="<?= $_display->string($class->getId()) ?>"
+                       title="<?= $_display->string($class) ?>"
+                       aria-label="<?= $_display->string($class) ?>"
+                    >
+                        <img src="<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($class->getImage()) ?>"
+                             alt="<?= $_display->string($class) ?>"
+                        >
+                    </a>
+                    <ul class="hidden hover-container">
+                        <?php foreach ($specRepo->listByClass($class->getId()) as $spec): ?>
+                            <li>
+                                <a href="<?= RELATIVE_ROOT_PATH ?>/specialization-<?= $_display->string($spec->getId()) ?>"
+                                   data-type="specialization"
+                                   data-role="<?= $_display->string($spec->getRoleId()) ?>"
+                                   data-class="<?= $_display->string($class->getId()) ?>"
+                                   data-specialization="<?= $_display->string($spec->getId()) ?>"
+                                   title="<?= $_display->string($spec, '-', ' ') ?>"
+                                   aria-label="<?= $_display->string($spec, '-', ' ') ?>"
+                                >
+                                    <img src="<?= RELATIVE_ROOT_PATH ?>/<?= $_display->string($spec->getImage()) ?>"
+                                         alt="<?= $_display->string($spec, '-', ' ') ?>"
+                                    >
+                                </a>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+</div>

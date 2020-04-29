@@ -1,0 +1,12 @@
+{
+  "require": {
+    "mongodb/mongodb": "^1.6",
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-http": "*",
+    "ext-ctype": "*",
+    "ext-openssl": "*",
+    "ext-pdo": "*"
+  }
+}

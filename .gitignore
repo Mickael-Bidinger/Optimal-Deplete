@@ -1,0 +1,14 @@
+/.idea/
+/application/controller/AdminController.php
+/application/controller/UpdateController.php
+/application/model/UserModel.php
+/assets/js/admin.js
+/assets/js/class/AdminForm.js
+/config/infrastructure.json
+/config/routes.json
+/public/js/admin.js
+/template/view/admin/
+/node_modules/
+/var/
+/vendor/
+optimal_deplete.sql

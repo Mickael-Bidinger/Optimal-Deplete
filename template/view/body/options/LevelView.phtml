@@ -1,0 +1,27 @@
+<div class="container">
+    <h3>Key Level</h3>
+    <form>
+        <label>
+            Min: <input type="text" data-type="level-min" data-min="<?= $keyLevelMin ?>">
+        </label>
+        <label>
+            Max: <input type="text" data-type="level-max" data-max="<?= $keyLevelMax ?>">
+        </label>
+    </form>
+    <nav>
+        <ul>
+            <?php for ($level = $keyLevelMin; $level <= $keyLevelMax; $level++): ?>
+                <li>
+                    <a href="<?= RELATIVE_ROOT_PATH ?>/level-<?= $level ?>"
+                       data-type="level"
+                       data-level="<?= $level ?>"
+                       title="<?= $level ?>"
+                       aria-label="<?= $level ?>"
+                    >
+                        <?= $level ?>
+                    </a>
+                </li>
+            <?php endfor ?>
+        </ul>
+    </nav>
+</div>

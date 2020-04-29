@@ -1,0 +1,38 @@
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#specialization nav {
+
+  &:first-of-type{
+    margin-bottom: .5rem;
+  }
+
+  & + nav {
+    padding-top: .5rem;
+    box-shadow: 0 -.4rem .2rem -.3rem white;
+  }
+
+  ul li {
+    position: relative;
+
+    ul {
+      top: -.6rem;
+      left: 5.1rem;
+      width: max-content;
+      max-width: 17rem;
+      padding: .5rem;
+    }
+
+    &:hover ul {
+      display: flex !important;
+    }
+  }
+}
+
+#level nav {
+  padding-top: .5rem;
+  box-shadow: 0 -.4rem .2rem -.3rem white;
+}

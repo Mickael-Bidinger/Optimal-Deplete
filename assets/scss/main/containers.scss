@@ -1,0 +1,128 @@
+body {
+  background-color: $darkGrey;
+  color: white;
+  font-family: "Lato", sans-serif;
+}
+
+header, aside, section, footer {
+  width: 85%;
+  max-width: $maxWidthDesktop;
+  box-shadow: 0 0 1rem $black;
+  border-radius: 2rem;
+  margin: 2rem auto;
+  background-color: $grey;
+  padding: .5rem 2rem;
+}
+
+section, footer {
+  text-align: center;
+}
+
+aside {
+  margin-bottom: 3rem;
+}
+
+.container {
+  position: relative;
+  margin: 2%;
+  box-shadow: 0 0 .3rem white;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: $grey;
+}
+
+.hover-container {
+  background-color: $grey;
+  box-shadow: 0 0 .5rem .5rem black;
+  border: .1rem solid rgba(255, 255, 255, .5);
+  border-radius: 1rem;
+  z-index: 1;
+  position: absolute;
+}
+
+/*---------------------------------------------------
+#options
+------------------------------------------------------- */
+#filter > div {
+  min-height: 30rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  div {
+    padding-top: 1.5rem;
+  }
+}
+
+#specialization > div {
+  max-width: 30rem;
+}
+
+#dungeon > div {
+  max-width: 70rem;
+}
+
+#level > div {
+  max-width: 50rem;
+}
+
+#affix > div {
+  max-width: 70rem;
+}
+
+/*---------------------------------------------------
+#graphic
+------------------------------------------------------- */
+#svg {
+  display: flex;
+  justify-content: center;
+}
+
+#graphic-container {
+  display: flex;
+  max-width: 70rem;
+
+  li {
+    min-width: max-content;
+    width: 22rem;
+    height: 2.9rem;
+    text-align: right;
+  }
+
+  span {
+    vertical-align: middle;
+  }
+}
+
+#detail {
+  padding: .7rem;
+}
+
+#horizontal-line {
+  position: absolute;
+  border-top: .1rem dotted white;
+  height: 0;
+  width: 100%;
+  left: 0;
+}
+
+#vertical-line {
+  position: absolute;
+  border-left: .1rem dotted white;
+  height: 100%;
+  width: 0;
+  top: 0;
+}
+
+/*---------------------------------------------------
+footer
+------------------------------------------------------- */
+footer {
+  & > :not(aside) {
+    font-size: .8em;
+  }
+
+  & > :last-child {
+    font-size: .64em;
+  }
+}

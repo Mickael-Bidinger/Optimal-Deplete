@@ -1,0 +1,12 @@
+{
+  "_comment": "Remplissez les Id et mots de passes",
+  "database": {
+    "dsn": "mysql:host=localhost;dbname=",
+    "password": "",
+    "user": ""
+  },
+  "blizzardApi": {
+    "Client-ID": "",
+    "Client-secret": ""
+  }
+}
