@@ -1,14 +1,5 @@
 #detail table {
-  caption {
-    color: $orange;
-    font-weight: bold;
-    min-width: max-content;
-
-    span {
-      line-height: 2.9rem;
-      margin: 0 .5rem;
-    }
-  }
+  width: 100%;
 
   th {
     text-align: left;

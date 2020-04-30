@@ -53,7 +53,7 @@ class RenderingService
         $groupLegend = $this->getGroupLegend($counts['total'][0]);
         $group = $this->getGroup($counts['total'][0]);
 
-        $details = "<div class='hover-container'><table><caption>$groupLegend</caption>$detailsTable</table></div>";
+        $details = "<div class='hover-container'><h4>$groupLegend</h4><table>$detailsTable</table></div>";
         $graphic['svg'] = "<g>$group</g>";
         $graphic['ul'] = "<li>$groupLegend</li>";
 
@@ -62,7 +62,7 @@ class RenderingService
             $groupLegend = $this->getGroupLegend($count, $counts['sorting']);
             $group = $this->getGroup($count);
 
-            $details .= "<div class='hover-container'><table><caption>$groupLegend</caption>$detailsTable</table></div>";
+            $details .= "<div class='hover-container'><h4>$groupLegend</h4><table>$detailsTable</table></div>";
             $graphic['svg'] .= "<g>$group</g>";
             $graphic['ul'] .= "<li>$groupLegend</li>";
         }

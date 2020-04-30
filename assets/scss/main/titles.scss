@@ -24,3 +24,15 @@ div h2, div h3 {
   top: -1.1rem;
   left: 1.1rem;
 }
+
+#detail h4 {
+  color: $orange;
+  font-weight: bold;
+  min-width: max-content;
+  margin: 0;
+
+  span {
+    line-height: 2.9rem;
+    margin: 0 .5rem;
+  }
+}
