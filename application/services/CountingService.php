@@ -6,7 +6,7 @@ use App\model\CurrentUpdateModel;
 use App\repository\AffixSetRepository;
 use App\repository\DungeonRepository;
 use App\repository\FactionRepository;
-use App\repository\LeaderboardRepository;
+use App\repository\LeaderboardStatRepository;
 use App\repository\SpecRepository;
 
 class CountingService
@@ -14,14 +14,14 @@ class CountingService
     private $affixSets;
     private $dungeons;
     private $factions;
-    private $leaderboardRepository;
+    private $leaderboardStatRepository;
     private $levels;
     private $sortings = ['specialization', 'dungeon', 'level', 'faction', 'affix', 'none'];
     private $specs;
 
     public function __construct()
     {
-        $this->leaderboardRepository = new LeaderboardRepository();
+        $this->leaderboardStatRepository = new LeaderboardStatRepository();
 
         $this->affixSets = \array_keys((new AffixSetRepository())->list() ?? []);
         $this->dungeons = \array_keys((new DungeonRepository())->list() ?? []);
@@ -56,14 +56,14 @@ class CountingService
 
         $result = [
             'counts' => [],
-            'total' => $this->leaderboardRepository->count($sql),
+            'total' => $this->leaderboardStatRepository->count($sql),
             'sorting' => $sorting,
             'sortings' => $this->sortings
         ];
 
         if ($sorting !== 'none') {
             $sql = $this->getSql($filters, $sorting);
-            $result['counts'] = $this->leaderboardRepository->count($sql);
+            $result['counts'] = $this->leaderboardStatRepository->count($sql);
         }
 
         return $result;
@@ -94,7 +94,7 @@ class CountingService
                 SUM(chest_3) as \"3\",
                 SUM(total) as total,
                 (SUM(chest_0) / SUM(total)) as percent
-            FROM leaderboard
+            FROM leaderboard_stats
             WHERE 
                 affix {$this->getAffixes($filters, $sorting)} AND
                 dungeon {$this->getDungeons($filters, $sorting)} AND

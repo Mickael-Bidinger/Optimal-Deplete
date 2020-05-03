@@ -10,6 +10,7 @@ use App\repository\FactionRepository;
 use App\repository\RoleRepository;
 use App\repository\SpecRepository;
 use MB\ControllerInterface;
+use MB\Http;
 
 /**
  * Class HomeController
@@ -20,7 +21,7 @@ class FiltersController implements ControllerInterface
 
     public function index(array $parameters): array
     {
-        return [];
+        Http::redirectTo('');
     }
 
     /**

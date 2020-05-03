@@ -59,6 +59,19 @@ class CurrentUpdateModel
         return $response['key_level_min'];
     }
 
+    public function getLastLeaderboardId(): ?int
+    {
+        $db = new Database();
+        $response = $db->queryOne('SELECT last_leaderboard_id FROM current_update');
+        $db = null;
+
+        if ($response === false) {
+            return null;
+        }
+
+        return $response['last_leaderboard_id'];
+    }
+
     public function getSeason(): ?int
     {
         $db = new Database();
@@ -81,19 +94,14 @@ class CurrentUpdateModel
         $db = new Database();
         $db->execute('
             UPDATE current_update 
-            SET key_level_max = NULL,
+            SET 
+                is_forcing = 0,
+                is_reseting = 0,
+                key_level_max = NULL,
                 key_level_min = NULL,
-                is_reseting = 0
+                last_leaderboard_id = 0,
+                season = 0
         ');
-        $db = null;
-
-        return $this;
-    }
-
-    public function resetIsForcing(): self
-    {
-        $db = new Database();
-        $db->execute('UPDATE current_update SET is_forcing = 0');
         $db = null;
 
         return $this;
@@ -111,9 +119,20 @@ class CurrentUpdateModel
         return $this;
     }
 
+    public function setLastLeaderboardId(int $lastLeaderboardId): self
+    {
+        $db = new Database();
+        $db->execute(
+            'UPDATE current_update SET last_leaderboard_id = :last_leaderboard_id',
+            [':last_leaderboard_id' => $lastLeaderboardId]
+        );
+        $db = null;
+
+        return $this;
+    }
+
     public function start(): bool
     {
-
         $db = new Database();
         $rowCount = $db->executeGetRowCount("
             UPDATE current_update 

@@ -13,6 +13,7 @@ use App\repository\DungeonRepository;
 use App\repository\FactionRepository;
 use App\repository\LastUpdatedRepository;
 use App\repository\LeaderboardRepository;
+use App\repository\LeaderboardStatRepository;
 use App\repository\PeriodRepository;
 use App\repository\RealmRepository;
 use App\repository\RoleRepository;
@@ -28,6 +29,7 @@ class UpdatingService
     private $factionRepository;
     private $lastUpdatedRepository;
     private $leaderboardRepository;
+    private $leaderboardStatRepository;
     private $periodRepository;
     private $realmRepository;
     private $region;
@@ -45,6 +47,7 @@ class UpdatingService
         $this->dungeonRepository = new DungeonRepository();
         $this->factionRepository = new FactionRepository();
         $this->lastUpdatedRepository = new LastUpdatedRepository();
+        $this->leaderboardStatRepository = new LeaderboardStatRepository();
         $this->leaderboardRepository = new LeaderboardRepository();
         $this->periodRepository = new PeriodRepository();
         $this->realmRepository = new RealmRepository();
@@ -80,7 +83,7 @@ class UpdatingService
                 ->updateDungeons()
                 ->updateAffixes()
                 ->updateLastUpdated()
-                ->currentUpdate->updateSeason($currentSeason)->resetIsForcing();
+                ->currentUpdate->updateSeason($currentSeason);
         }
 
         $this
@@ -132,15 +135,6 @@ class UpdatingService
 
     }
 
-    private function getDetailedMembers(array $members): array
-    {
-        foreach ($members as &$member) {
-            $member = (int)$member['specialization']['id'];
-        }
-
-        return $members;
-    }
-
     private function getFactionId(array &$factions, array $run): int
     {
         $factionName = 'NONE';
@@ -157,21 +151,19 @@ class UpdatingService
         return \array_search($factionName, $factions);
     }
 
-    private function getKeyLevel(?int &$min, ?int &$max, array $run): int
+    private function getMembersSpec(array $members): array
     {
-        if (!isset($run['keystone_level'])) {
-            return 0;
+        foreach ($members as &$member) {
+            $member = (int)$member['specialization']['id'];
         }
+        \sort($members);
+        $members[0] = $members[0] ?? 'NULL';
+        $members[1] = $members[1] ?? 'NULL';
+        $members[2] = $members[2] ?? 'NULL';
+        $members[3] = $members[3] ?? 'NULL';
+        $members[4] = $members[4] ?? 'NULL';
 
-        $keyLevel = $run['keystone_level'];
-
-        if ($keyLevel > $max || \is_null($max)) {
-            $max = $keyLevel;
-        }
-        if ($keyLevel < $min || \is_null($min)) {
-            $min = $keyLevel;
-        }
-        return $keyLevel;
+        return $members;
     }
 
     private function reset(bool $isReseting): self
@@ -179,18 +171,33 @@ class UpdatingService
         $this->affixRepository->reset($isReseting);
         $this->affixSetRepository->reset($isReseting);
         $this->classRepository->reset($isReseting);
+        $this->currentUpdate->reset($isReseting);
         $this->dungeonRepository->reset($isReseting);
         $this->factionRepository->reset($isReseting);
         $this->lastUpdatedRepository->reset($isReseting);
         $this->leaderboardRepository->reset($isReseting);
+        $this->leaderboardStatRepository->reset($isReseting);
         $this->periodRepository->reset($isReseting);
         $this->realmRepository->reset($isReseting);
         $this->roleRepository->reset($isReseting);
         $this->specRepository->reset($isReseting);
 
-        $this->currentUpdate->reset($isReseting);
-
         return $this;
+    }
+
+    private function setKeyLevelMinMax(?int &$max, ?int &$min, array $run)
+    {
+        if (!isset($run['keystone_level'])) {
+            return;
+        }
+        if ($run['keystone_level'] > $max || \is_null($max)) {
+            $max = $run['keystone_level'];
+        }
+        if ($run['keystone_level'] < $min || \is_null($min)) {
+            $min = $run['keystone_level'];
+        }
+
+        return;
     }
 
     private function updateAffixes(): self
@@ -260,11 +267,16 @@ class UpdatingService
 
         foreach ($this->lastUpdatedRepository->list($limit) as $lastUpdatedId => $lastUpdated) {
             $dungeonId = $lastUpdated->getDungeonId();
+            $lastDungeonTime = $lastUpdated->getLastDungeon();
+            $lastPeriod = $lastUpdated->getLastPeriod();
             $realmId = $lastUpdated->getRealmId();
             $region = $regions[$lastUpdated->getRegionId()];
 
+            $dungeon = $dungeons[$dungeonId];
+            $currentLastDungeonTime = $lastDungeonTime;
+
             foreach ($periods as $periodId => $period) {
-                if ($lastUpdated->getLastPeriod() > $periodId) {
+                if ($lastPeriod > $periodId) {
                     continue;
                 }
 
@@ -280,50 +292,81 @@ class UpdatingService
                     break;
                 }
 
+                $lastPeriod = $periodId;
                 $affixSetId = $this->getAffixSetId($affixSets, $leaderboards['keystone_affixes']);
-                $dungeon = $dungeons[$dungeonId];
-                $lastDungeonTime = $lastUpdated->getLastDungeon();
-                $currentLastDungeonTime = $lastDungeonTime;
+
                 foreach ($leaderboards['leading_groups'] as $run) {
-                    if ($run['completed_timestamp'] < $lastDungeonTime) {
+                    if ($run['completed_timestamp'] <= $lastDungeonTime) {
                         continue;
                     }
                     if ($run['completed_timestamp'] > $currentLastDungeonTime) {
                         $currentLastDungeonTime = $run['completed_timestamp'];
                     }
 
-                    $keyLevel = $this->getKeyLevel($keyLevelMin, $keyLevelMax, $run);
-                    $factionId = $this->getFactionId($factions, $run);
                     $chest = $this->getChest($run['duration'], $dungeon);
-                    $members = $this->getDetailedMembers($run['members']);
+                    $factionId = $this->getFactionId($factions, $run);
+                    $membersSpec = $this->getMembersSpec($run['members']);
 
+                    $this->setKeyLevelMinMax($keyLevelMax, $keyLevelMin, $run);
                     $this->leaderboardRepository->buffer([
-                        'affix' => $affixSetId,
-                        'chest' => $chest,
-                        'dungeon' => $dungeonId,
-                        'faction' => $factionId,
-                        'level' => $keyLevel,
-                        'specs' => $members,
+                        'affix' => (int)$affixSetId,
+                        'chest' => (int)$chest,
+                        'completed' => (int)$run['completed_timestamp'],
+                        'dungeon' => (int)$dungeonId,
+                        'faction' => (int)$factionId,
+                        'level' => (int)$run['keystone_level'],
+                        'specs' => $membersSpec
                     ]);
                 }
-
-                $attempts = 0;
-                do {
-                    try {
-                        $this->leaderboardRepository->flush();
-                        $this->lastUpdatedRepository->update($lastUpdatedId, $periodId, $currentLastDungeonTime);
-                        $this->currentUpdate->updateKeyLevelMinMax($keyLevelMin, $keyLevelMax);
-                    } catch (\PDOException $PDOException) {
-                        if (++$attempts === 10) {
-                            return $this;
-                        }
-                        sleep(10);
-                        continue;
-                    }
-                    break;
-                } while ($attempts < 10);
             }
+
+            $attempts = 0;
+            do {
+                try {
+                    $this->leaderboardRepository->flush();
+                    $this->lastUpdatedRepository->update($lastUpdatedId, $lastPeriod, $currentLastDungeonTime);
+                    $this->currentUpdate->updateKeyLevelMinMax($keyLevelMin, $keyLevelMax);
+                    $this->updateLeaderboardStats();
+                } catch (\PDOException $PDOException) {
+                    $this->leaderboardStatRepository->clear();
+                    if (++$attempts === 10) {
+                        return $this;
+                    }
+                    sleep(10);
+                    continue;
+                }
+                break;
+            } while ($attempts < 10);
+
         }
+
+        return $this;
+    }
+
+    private function updateLeaderboardStats(): self
+    {
+        $lastLeaderboardId = $this->currentUpdate->getLastLeaderboardId();
+
+        foreach ($this->leaderboardRepository->list($lastLeaderboardId) as $run) {
+            $lastLeaderboardId = (int)$run['id'];
+            $this->leaderboardStatRepository->buffer([
+                'affix' => (int)$run['affix'],
+                'chest' => (int)$run['chest'],
+                'dungeon' => (int)$run['dungeon'],
+                'faction' => (int)$run['faction'],
+                'level' => (int)$run['level'],
+                'specs' => [
+                    (int)$run['member_1'] ?? 0,
+                    (int)$run['member_2'] ?? 0,
+                    (int)$run['member_3'] ?? 0,
+                    (int)$run['member_4'] ?? 0,
+                    (int)$run['member_5'] ?? 0,
+                ]
+            ]);
+        }
+
+        $this->leaderboardStatRepository->flush();
+        $this->currentUpdate->setLastLeaderboardId($lastLeaderboardId);
 
         return $this;
     }
