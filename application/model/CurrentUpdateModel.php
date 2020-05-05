@@ -119,18 +119,6 @@ class CurrentUpdateModel
         return $this;
     }
 
-    public function setLastLeaderboardId(int $lastLeaderboardId): self
-    {
-        $db = new Database();
-        $db->execute(
-            'UPDATE current_update SET last_leaderboard_id = :last_leaderboard_id',
-            [':last_leaderboard_id' => $lastLeaderboardId]
-        );
-        $db = null;
-
-        return $this;
-    }
-
     public function start(): bool
     {
         $db = new Database();
@@ -176,21 +164,6 @@ class CurrentUpdateModel
     {
         $db = new Database();
         $db->execute('UPDATE current_update SET season = ?', [$season]);
-        $db = null;
-
-        return $this;
-    }
-
-    public function updateKeyLevelMinMax(int $keyLevelMin, int $keyLevelMax): self
-    {
-        $db = new Database();
-        $db->execute(
-            'UPDATE current_update SET key_level_max = :key_level_max, key_level_min = :key_level_min',
-            [
-                ':key_level_max' => $keyLevelMax,
-                ':key_level_min' => $keyLevelMin,
-            ]
-        );
         $db = null;
 
         return $this;

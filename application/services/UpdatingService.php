@@ -289,11 +289,12 @@ class UpdatingService
                     ||
                     !isset($leaderboards['leading_groups'])
                 ) {
+                    echo 'crashed blizzardApi', PHP_EOL;
                     break;
                 }
 
-                $lastPeriod = $periodId;
                 $affixSetId = $this->getAffixSetId($affixSets, $leaderboards['keystone_affixes']);
+                $lastPeriod = $periodId;
 
                 foreach ($leaderboards['leading_groups'] as $run) {
                     if ($run['completed_timestamp'] <= $lastDungeonTime) {
@@ -323,21 +324,19 @@ class UpdatingService
             $attempts = 0;
             do {
                 try {
-                    $this->leaderboardRepository->flush();
-                    $this->lastUpdatedRepository->update($lastUpdatedId, $lastPeriod, $currentLastDungeonTime);
-                    $this->currentUpdate->updateKeyLevelMinMax($keyLevelMin, $keyLevelMax);
-                    $this->updateLeaderboardStats();
+                    $this->leaderboardRepository->flush($lastUpdatedId, $lastPeriod, $currentLastDungeonTime, $keyLevelMin, $keyLevelMax);
                 } catch (\PDOException $PDOException) {
-                    $this->leaderboardStatRepository->clear();
-                    if (++$attempts === 10) {
-                        return $this;
+                    if ($attempts++ < 10) {
+                        sleep(10);
+                        continue;
                     }
-                    sleep(10);
-                    continue;
+                    $this->leaderboardRepository->clear();
+                    echo 'crashed leaderboardRepository', PHP_EOL;
                 }
                 break;
-            } while ($attempts < 10);
+            } while (true);
 
+            $this->updateLeaderboardStats();
         }
 
         return $this;
@@ -347,26 +346,41 @@ class UpdatingService
     {
         $lastLeaderboardId = $this->currentUpdate->getLastLeaderboardId();
 
-        foreach ($this->leaderboardRepository->list($lastLeaderboardId) as $run) {
-            $lastLeaderboardId = (int)$run['id'];
-            $this->leaderboardStatRepository->buffer([
-                'affix' => (int)$run['affix'],
-                'chest' => (int)$run['chest'],
-                'dungeon' => (int)$run['dungeon'],
-                'faction' => (int)$run['faction'],
-                'level' => (int)$run['level'],
-                'specs' => [
-                    (int)$run['member_1'] ?? 0,
-                    (int)$run['member_2'] ?? 0,
-                    (int)$run['member_3'] ?? 0,
-                    (int)$run['member_4'] ?? 0,
-                    (int)$run['member_5'] ?? 0,
-                ]
-            ]);
-        }
+        do {
+            $runs = $this->leaderboardRepository->list($lastLeaderboardId, 500);
+            foreach ($runs as $run) {
+                $lastLeaderboardId = (int)$run['id'];
+                $this->leaderboardStatRepository->buffer([
+                    'affix' => (int)$run['affix'],
+                    'chest' => (int)$run['chest'],
+                    'dungeon' => (int)$run['dungeon'],
+                    'faction' => (int)$run['faction'],
+                    'level' => (int)$run['level'],
+                    'specs' => [
+                        (int)$run['member_1'] ?? 0,
+                        (int)$run['member_2'] ?? 0,
+                        (int)$run['member_3'] ?? 0,
+                        (int)$run['member_4'] ?? 0,
+                        (int)$run['member_5'] ?? 0,
+                    ]
+                ]);
+            }
 
-        $this->leaderboardStatRepository->flush();
-        $this->currentUpdate->setLastLeaderboardId($lastLeaderboardId);
+            $attempts = 0;
+            do {
+                try {
+                    $this->leaderboardStatRepository->flush($lastLeaderboardId);
+                } catch (\PDOException $PDOException) {
+                    if ($attempts++ < 10) {
+                        sleep(10);
+                        continue;
+                    }
+                    $this->leaderboardStatRepository->clear();
+                    echo 'crashed leaderboardStatRepository', PHP_EOL;
+                }
+                break;
+            } while (true);
+        } while (!empty($runs));
 
         return $this;
     }

@@ -54,23 +54,28 @@ class LeaderboardStatRepository
         return $counts;
     }
 
-    public function flush()
+    public function flush(int $lastId)
     {
         if ($this->queue === ['', '', '', '']) {
             return;
         }
         foreach ($this->queue as $chest => &$sql) {
+            if ($sql === '') continue;
             $sql = \rtrim($sql, ",");
             $sql = "
                 INSERT INTO leaderboard_stats
                   (affix, dungeon, faction, level, specialization, chest_$chest, total)
-                VALUES" .
-                $sql .
-                PHP_EOL . "ON DUPLICATE KEY UPDATE chest_$chest = chest_$chest + 1, total = total + 1;";
+                VALUES $sql
+                ON DUPLICATE KEY UPDATE chest_$chest = chest_$chest + 1, total = total + 1;";
         }
 
         $db = new Database();
-        $db->execute(\implode(PHP_EOL, $this->queue));
+        $db->execute('
+            START TRANSACTION;' .
+            \implode($this->queue) . "
+            UPDATE current_update SET last_leaderboard_id = $lastId;
+            COMMIT;"
+        );
         $db = null;
         $this->queue = ['', '', '', ''];
     }

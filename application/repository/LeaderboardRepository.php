@@ -25,16 +25,34 @@ class LeaderboardRepository
              {$leaderboard['specs'][4]}),";
     }
 
-    public function flush()
+    public function clear()
+    {
+        $this->queue = '';
+    }
+
+    public function flush(int $id, int $lastPeriod, int $lastDungeon, int $keyLevelMin, int $keyLevelMax)
     {
         if ($this->queue === '') {
             return;
         }
         $this->queue = \rtrim($this->queue, ",");
         $this->queue = "
-            INSERT IGNORE INTO leaderboard
-              (affix, chest, completed_timestamp, dungeon, faction, level, member_1, member_2, member_3, member_4, member_5)
-            VALUES $this->queue;";
+            START TRANSACTION;
+            
+            INSERT INTO leaderboard 
+                (affix, chest, completed_timestamp, dungeon, faction, level, member_1, member_2, member_3, member_4, member_5)
+            VALUES $this->queue
+            ON DUPLICATE KEY UPDATE id=id;
+                
+            UPDATE last_updated 
+            SET last_period = $lastPeriod,
+                last_dungeon = $lastDungeon,
+                last_update_date = '" . date_create()->format('Y-m-d H:i:s') . "'
+            WHERE id = $id;
+                
+            UPDATE current_update SET key_level_max = $keyLevelMax, key_level_min = $keyLevelMin;
+            
+            COMMIT;";
 
         $db = new Database();
         $db->execute($this->queue);
@@ -42,14 +60,16 @@ class LeaderboardRepository
         $this->queue = '';
     }
 
-    public function list(int $fromId = 0): array
+    public function list(int $fromId = 0, int $limit = 0): array
     {
+        $limit = $limit === 0 ? '' : "LIMIT $limit";
         $db = new Database();
         $response = $db->queryMultiple("
             SELECT *
             FROM leaderboard
             WHERE id > $fromId
             ORDER BY id
+            $limit 
         ");
         $db = null;
 

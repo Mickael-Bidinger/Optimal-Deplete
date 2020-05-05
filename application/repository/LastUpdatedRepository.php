@@ -43,8 +43,6 @@ class LastUpdatedRepository
      */
     public function list(int $limit): ?array
     {
-        // $limit étant un int, pas d'injection SQL possible.
-        // par ailleurs, c'est moi qui set $limit dans le code (à des fins de tests)
         $limit = $limit === 0 ? '' : "LIMIT $limit";
         $db = new Database();
         $response = $db->queryMultiple("SELECT * FROM last_updated ORDER BY last_update_date, id $limit");
@@ -77,26 +75,6 @@ class LastUpdatedRepository
         $db = new Database();
         $db->execute('SET FOREIGN_KEY_CHECKS = 0; TRUNCATE TABLE last_updated;');
         $db = null;
-
-    }
-
-    public function update(int $id, int $lastPeriod, int $lastDungeon)
-    {
-        $db = new Database();
-        $db->execute('
-            UPDATE last_updated 
-                SET last_period = :last_period,
-                    last_dungeon = :last_dungeon,
-                    last_update_date = :last_update_date
-                WHERE id = :id
-        ', [
-            ':id' => $id,
-            ':last_period' => $lastPeriod,
-            ':last_dungeon' => $lastDungeon,
-            ':last_update_date' => date_create()->format('Y-m-d H:i:s'),
-        ]);
-        $db = null;
-
     }
 
 }
