@@ -22,7 +22,8 @@ class BlizzardApi
         $authToken = $this->getToken();
         \curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
         \curl_setopt($this->curl, CURLOPT_HTTPHEADER, ["Authorization: Bearer $authToken"]);
-        \curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 60);
+        \curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 5);
+        \curl_setopt($this->curl, CURLOPT_TIMEOUT, 10);
     }
 
     private function getToken(): string

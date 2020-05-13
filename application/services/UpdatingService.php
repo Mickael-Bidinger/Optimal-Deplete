@@ -280,16 +280,26 @@ class UpdatingService
                     continue;
                 }
 
-                $leaderboards = $this->blizzardApi->listLeaderboards($region, $realmId, $dungeonId, $periodId);
+                $attempts = 0;
+                do {
+                    $leaderboards = $this->blizzardApi->listLeaderboards($region, $realmId, $dungeonId, $periodId);
+
+                    if (\is_null($leaderboards)) {
+                        if ($attempts++ < 10) {
+                            sleep(10);
+                            continue;
+                        }
+                        echo 'crashed blizzardApi', PHP_EOL;
+                        break 2;
+                    }
+                    break;
+                } while (true);
 
                 if (
-                    \is_null($leaderboards)
-                    ||
                     (isset($leaderboards['code']) && $leaderboards['code'] !== 200)
                     ||
                     !isset($leaderboards['leading_groups'])
                 ) {
-                    echo 'crashed blizzardApi', PHP_EOL;
                     break;
                 }
 

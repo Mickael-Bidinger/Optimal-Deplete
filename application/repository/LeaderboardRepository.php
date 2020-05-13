@@ -32,7 +32,11 @@ class LeaderboardRepository
 
     public function flush(int $id, int $lastPeriod, int $lastDungeon, int $keyLevelMin, int $keyLevelMax)
     {
+        $date = date_create()->format('Y-m-d H:i:s');
         if ($this->queue === '') {
+            $db = new Database();
+            $db->execute("UPDATE last_updated SET last_update_date = '$date' WHERE id = $id;");
+            $db = null;
             return;
         }
         $this->queue = \rtrim($this->queue, ",");
@@ -47,10 +51,10 @@ class LeaderboardRepository
             UPDATE last_updated 
             SET last_period = $lastPeriod,
                 last_dungeon = $lastDungeon,
-                last_update_date = '" . date_create()->format('Y-m-d H:i:s') . "'
+                last_update_date = '$date'
             WHERE id = $id;
                 
-            UPDATE current_update SET key_level_max = $keyLevelMax, key_level_min = $keyLevelMin;
+            UPDATE current_update SET key_level_max = $keyLevelMax, key_level_min = $keyLevelMin, last_modified = '$date';
             
             COMMIT;";
 

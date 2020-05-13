@@ -127,17 +127,17 @@ class CurrentUpdateModel
             SET 
                 is_running = 
                     CASE 
-                        WHEN @cond := (is_running = 0 OR is_running_since < :two_days_ago) THEN 1
+                        WHEN @cond := (is_running = 0 OR last_modified < :two_hours_ago) THEN 1
                         ELSE is_running
                     END,
-                is_running_since = 
+                last_modified = 
                     CASE
                         WHEN @cond THEN :now
-                        ELSE is_running_since
+                        ELSE last_modified
                     END;
             ", [
                 ':now' => \date_create()->format('Y-m-d H:i:s'),
-                ':two_days_ago' => \date_create('-2 day')->format('Y-m-d H:i:s'),
+                ':two_hours_ago' => \date_create('-2 hours')->format('Y-m-d H:i:s'),
             ]
         );
         $db = null;
