@@ -174,7 +174,7 @@ class BlizzardApi
 
     public function listPeriodsBySeason(int $season): array
     {
-        $url = sprintf($this->urls['eu'], "mythic-keystone/season/$season", 'dynamic');
+        $url = sprintf($this->urls['us'], "mythic-keystone/season/$season", 'dynamic');
         return $this->getByUrl($url)['periods'];
     }
 
