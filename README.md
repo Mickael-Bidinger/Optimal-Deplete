@@ -18,7 +18,8 @@ En un mot :
 - Back-end: importation de données (150M+ lignes), déduction de statistiques (500k+ possibilités), rendering SVG
 - Front-end: AJAX vers API interne, mise à jour du contenu de la page, diverses mises à jour d'affichage
 
-L'objectif général de cette application est de découvrir l'effet des différents facteurs impactant les donjons mythiques plus de World of Warcraft.
+En détails :
+- L'objectif général de cette application est de découvrir l'effet des différents facteurs impactant les donjons mythiques plus de World of Warcraft.
 Il fourni donc des statistiques prenant en compte les filtres choisis par l'utilisateur : classes présentes, affixes, donjons, niveau de difficulté ...
 Cela permet, par exemple, de voir quelles sont les meilleures classes pour un contenu donné, ou quel donjon est le plus simple avec les affixes de la semaine.
 
