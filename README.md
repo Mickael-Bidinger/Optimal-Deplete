@@ -13,6 +13,7 @@ Je souhaite préciser les choses suivantes :
 - Le dossier tests est désespérément absent car il n'était pas au programme de la formation, il est entendu que j'ai exploré cette nécessité depuis.
 - Ayant manqué de temps sur la fin, je ne suis que moyennement content de l'optimisation algorithmique et architecturale. Ceci dit, web.dev me donne un score de 99.5 !
 - La "statistification" (sans doute le plus interessant) est ici : https://github.com/Mickael-Bidinger/Optimal-Deplete/blob/master/application/services/UpdatingService.php
+- Coté front voir https://github.com/Mickael-Bidinger/Optimal-Deplete/blob/470ea3954f73501257ef342d89f7e2a64c44cb70/assets/js/class/Options/Filters/Specialization.js
 
 En un mot :
 - Back-end: importation de données (150M+ lignes), déduction de statistiques (500k+ possibilités), rendering SVG
