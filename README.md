@@ -45,4 +45,4 @@ Ce dont je suis le plus fier :
 
 Le mot de la fin :
 - Leonard de Vinci a dit... "L'art n'est jamais terminé, seulement abandonné."
-Je vois le développement de la même manière ! J'aurai souhaité avoir un délai plus long pour optimiser d'avantage.
+Je vois le développement de la même manière ! Une application peut toujours être améliorée/optimisée.
